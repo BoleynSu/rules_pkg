@@ -21,6 +21,7 @@ load("//pkg:pkg.bzl", "SUPPORTED_TAR_COMPRESSIONS", "pkg_tar", "pkg_zip")
 load("//tests/util:defs.bzl", "directory", "fake_artifact")
 load("@rules_python//python:defs.bzl", "py_test")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 
 licenses(["notice"])
 
@@ -419,10 +420,15 @@ pkg_tar(
     strip_prefix = "et",
 )
 
+pkg_files(
+    name = "your-files",
+    srcs = ["BUILD"],
+    strip_prefix = strip_prefix.from_pkg(""),
+)
 pkg_tar(
     name = "test-tar-strip_prefix-external_workspace",
     srcs = [
-         "BUILD",
+        ":your-files",
     ],
     strip_prefix = ".",
     visibility = ["//visibility:public"],
